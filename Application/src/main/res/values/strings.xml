@@ -39,5 +39,6 @@
     <string name="discoverable">Make discoverable</string>
     <string name="fg_color">foreground color</string>
     <string name="sync_time">sync time</string>
+    <string name="save">save</string>
 
 </resources>

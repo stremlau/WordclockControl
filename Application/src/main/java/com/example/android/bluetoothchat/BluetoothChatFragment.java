@@ -28,27 +28,21 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import com.buzzingandroid.ui.HSVColorPickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,6 +73,7 @@ public class BluetoothChatFragment extends Fragment {
     private ToggleButton fullText;
 
     private Button syncTime;
+    private Button saveSettings;
 
     /**
      * Name of the connected device
@@ -189,6 +184,7 @@ public class BluetoothChatFragment extends Fragment {
         fullText = (ToggleButton) view.findViewById(R.id.fullText);
 
         syncTime = (Button) view.findViewById(R.id.sync_button);
+        saveSettings = (Button) view.findViewById(R.id.save_button);
     }
 
     /**
@@ -256,6 +252,14 @@ public class BluetoothChatFragment extends Fragment {
             }
         });
 
+        saveSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                byte[] out = {'S', (byte) 0, (byte) 0, (byte) 0};
+                sendMessage(out);
+            }
+        });
+
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(getActivity(), mHandler);
 
@@ -300,6 +304,15 @@ public class BluetoothChatFragment extends Fragment {
 
         byte[] out = {'T', (byte) h, (byte) m, (byte) s};
         sendMessage(out);
+
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        int mo = c.get(Calendar.MONTH) + 1;
+        int y = c.get(Calendar.YEAR) - 2000;
+
+        Log.d("date", d + "-" + mo + "-" + y);
+
+        byte[] out2 = {'D', (byte) mo, (byte) m, (byte) y};
+        sendMessage(out2);
     }
 
 

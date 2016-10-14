@@ -112,5 +112,9 @@
         android:text="@string/sync_time"
         android:id="@+id/sync_button"/>
 
+    <Button android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:id="@+id/save_button"/>
 
 </LinearLayout>
