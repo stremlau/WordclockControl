@@ -28,6 +28,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +47,7 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.List;
 
 /**
@@ -297,21 +299,22 @@ public class BluetoothChatFragment extends Fragment {
     }
 
     private void sendTime() {
-        Calendar c = Calendar.getInstance();
-        int h = c.get(Calendar.HOUR);
-        int m = c.get(Calendar.MINUTE);
-        int s = c.get(Calendar.SECOND);
+        // The RTC of the wordclock stores the time as UTC
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        int second = c.get(Calendar.SECOND);
 
-        byte[] out = {'T', (byte) h, (byte) m, (byte) s};
+        Log.d("time", hour + ":" + minute + ":" + second);
+        byte[] out = {'T', (byte) hour, (byte) minute, (byte) second};
         sendMessage(out);
 
-        int d = c.get(Calendar.DAY_OF_MONTH);
-        int mo = c.get(Calendar.MONTH) + 1;
-        int y = c.get(Calendar.YEAR) - 2000;
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH) + 1; // month index is from 0 (jan) to 11 (dec)
+        int year = c.get(Calendar.YEAR) - 2000;
 
-        Log.d("date", d + "-" + mo + "-" + y);
-
-        byte[] out2 = {'D', (byte) mo, (byte) m, (byte) y};
+        Log.d("date", day + "-" + month + "-" + year);
+        byte[] out2 = {'D', (byte) day, (byte) month, (byte) year};
         sendMessage(out2);
     }
 
@@ -477,3 +480,4 @@ public class BluetoothChatFragment extends Fragment {
     }
 
 }
+
